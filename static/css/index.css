@@ -139,7 +139,7 @@ body {
 }
 
 .tag.is-active {
-  background-color: #f60c65d5 !important;  /* bright pink */
+  background-color: #fa337fba !important;  /* bright pink */
   color: white !important;
   font-weight: bold;
 }
