@@ -129,6 +129,16 @@
           <figure class="image">
             <img src="./static/images/results.png" alt="Results Overview">
           </figure>
+          <p style="font-size: medium; text-align: center; margin-top: -30px;">
+            <i>
+              <strong>Effectiveness of Reinforcement Fine-Tuning.</strong>
+              We compare QA accuracy and temporal anomaly grounding performance across different models.
+              <strong>VAU-R1</strong>, trained via Reinforcement Fine-Tuning (RFT), consistently outperforms its Supervised Fine-Tuning (SFT) counterpart.
+              This demonstrates that RFT enhances both reasoning and temporal localization capabilities in VAU tasks.
+            </i>
+          </p>
+
+
           <h3>🔍 Key Contributions</h3>
           <ul>
             <li><strong>VAU-R1:</strong> a data-efficient Reinforcement Fine-Tuning framework that improves the reasoning ability of MLLMs for video anomaly understanding. It outperforms standard supervised fine-tuning on reasoning-intensive tasks.</li>
@@ -137,7 +147,7 @@
           </ul>
           <figure class="image">
             <img src="./static/images/bench.png">
-            <p style="font-size: medium;"><i>
+            <p style="font-size: medium; text-align: center;"><i>
             <b>Statistics of our VAU-Bench.</b>
             (a) Distribution of main anomaly types.
             (b) Distribution of video durations <i>(top)</i> and the proportion of anomalous segments within each video <i>(bottom)</i>.  
@@ -212,7 +222,7 @@
     </table>
 
     <center>
-      <p style="font-size: medium;">
+      <p style="font-size: medium; text-align: center; margin-top: 10px;">
         <i>Comparison of performance on MSAD and UCF-Crime datasets on multiple-choice QA task and anomaly reasoning task.
         Results are reported for inference with and without Chain-of-Thought ("think") prompts.</i>
       </p>
@@ -267,10 +277,9 @@
         <tr></tr>
       </tbody>
     </table>
-    <center>
-    <p style="font-size: medium;">
+    <p style="font-size: medium; text-align: center; margin-top: 10px;">
       <i>Comparison of temporal anomaly grounding performance on the three datasets. we evaluate temporal anomaly grounding on three datasets: <strong>MSAD</strong>, <strong>ECVA</strong>, and <strong>UCF-Crime</strong>. All models are trained only on MSAD and ECVA, while UCF-Crime is treated as an <em>out-of-distribution</em> (OOD) test set to assess cross-dataset generalization.</i>
-    </p></center>
+    </p>
 
 
     <h3>🧪 Task Co-Training for Anomaly Classification</h3>
