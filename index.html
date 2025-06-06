@@ -78,7 +78,7 @@
                   <span class="icon">
                       <img src="./static/images/huggingface_logo-noborder.svg">
                   </span>
-                  <span>Data</span>
+                  <span>&nbspData</span>
                   </a>
             </div>
           </div>
@@ -365,62 +365,105 @@
   </div>
 </section>
 
-<section class="section" id="Dataset">
+<section class="section" id="CaseStudy">
   <div class="container is-max-desktop content">
     <h2 class="title">✏️ Case Study</h2>
-    <div class="columns is-variable is-6">
-    
-      <!-- QA + TAG Case -->
-      <div class="column is-half">
-        <figure class="image">
-          <img src="./static/images/qa_grounding_case_study.png" alt="QA and TAG Case Study">
-        </figure>
-        <p>
-          <strong>Qualitative case of the QA (<em>top</em>) and TAG (<em>bottom</em>) task.</strong> All ground-truths and correct answers are highlighted in orange. Both SFT and RFT perform inference using the same Chain-of-Thought (CoT) prompt. RFT’s explicit reasoning yields more precise, interpretable QA choices and anomaly intervals, whereas SFT’s outputs are less informative and often inaccurate.
-        </p>
-      </div>
 
-      <!-- Reasoning Case -->
-      <div class="column is-half">
-        <figure class="image">
-          <img src="./static/images/reasoning_case_study.png" alt="Anomaly Reasoning Case Study">
-        </figure>
-        <p>
-          <strong>Qualitative case of the Anomaly Reasoning task.</strong> All correct descriptions and analyses are highlighted in orange. Evaluation scores appear beside each answer. Both SFT and VAU-R1 use the same CoT prompt for inference. VAU-R1 accurately identifies the anomaly with high fluency, though it omits reasoning for the core event, while SFT's output is less accurate and tends to repeat.
-        </p>
-      </div>
+    <!-- Case Toggle Tags -->
+    <div class="tags are-medium">
+      <span class="tag is-link is-light toggle-button" data-target="qa">Multi-choice QA</span>
+      <span class="tag is-link is-light toggle-button" data-target="tag">Temporal Anomaly Grounding</span>
+      <span class="tag is-link is-light toggle-button" data-target="reasoning">Anomaly Reasoning</span>
+    </div>
 
+    <!-- QA Case -->
+    <div id="qa" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/qa_case_study.png" alt="QA Case Study">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -10px;">
+        <i>
+          <strong>Qualitative case of the QA task.</strong> The correct answer is highlighted in orange. RFT yields more precise, interpretable QA choices, while SFT's output is less informative.
+        </i>
+      </p>
+    </div>
+
+    <!-- TAG Case -->
+    <div id="tag" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/tag_case_study.png" alt="TAG Case Study">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -10px;">
+        <i>
+          <strong>Qualitative case of the TAG task.</strong> The ground-truth is highlighted in orange. RFT yields more precise anomaly intervals, while SFT’s output is inaccurate.
+        </i>
+      </p>
+    </div>
+
+    <!-- Reasoning Case -->
+    <div id="reasoning" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/reasoning_case_study.png" alt="Anomaly Reasoning Case Study">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -10px;">
+        <i>
+          <strong>Qualitative case of the Anomaly Reasoning task.</strong> Correct descriptions and analyses are highlighted in orange. VAU-R1 identifies the anomaly with high fluency, though omits reasoning for the core event. SFT's output is less accurate and tends to repeat.
+        </i>
+      </p>
     </div>
   </div>
 </section>
 
 
-<section class="section" id="Dataset">
+
+
+
+<section class="section" id="DatasetExamples">
   <div class="container is-max-desktop content">
     <h2 class="title">📚 Dataset Examples</h2>
-    <div class="columns">
-    
-      <div>
-        <figure class="image">
-          <img src="./static/images/example_1.png" alt="Dataset Example 1">
-        </figure>
-        <p>
-          An <strong>explosion</strong> case in an outdoor backyard, highlighting complex anomaly detection and dynamic scene understanding. The clip is labeled with a question-answer pair, key visual evidence, anomaly type, and a multi-part reasoning chain covering location, cause-effect, and a high-level conclusion.
-        </p>
-      </div>
 
-      <div >
-        <figure class="image">
-          <img src="./static/images/example_2.png" alt="Dataset Example 2">
-        </figure>
-        <p>
-          A <strong>normal</strong> scene, used to evaluate model robustness against false positives and to enhance dataset diversity.
-        </p>
-      </div>
-
+    <!-- Radio-style Toggle Tags -->
+    <div class="tags are-medium">
+      <span class="tag is-link is-light toggle-button" data-target="example1">Explosion</span>
+      <span class="tag is-link is-light toggle-button" data-target="example2">Stealing</span>
+      <span class="tag is-link is-light toggle-button" data-target="example3">Normal</span>
     </div>
-  </div>
+
+    <!-- Example Content Blocks -->
+    <div id="example1" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/example_1.png" alt="Dataset Example 1">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -20px;">
+        <i>
+          An <strong>explosion</strong> case in an outdoor backyard, highlighting complex anomaly detection and dynamic scene understanding. The clip is labeled with a question-answer pair, key visual evidence, anomaly type, and a multi-part reasoning chain covering location, cause-effect, and a high-level conclusion.
+        </i>
+      </p>
+    </div>
+
+    <div id="example2" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/example_3.png" alt="Dataset Example 2">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -20px;">
+        <i>
+          An example of a <strong>stealing</strong> incident, demonstrating capabilities in human activity recognition and intent analysis.
+        </i>
+      </p>
+    </div>
+
+    <div id="example3" class="example-content is-hidden">
+      <figure class="image">
+        <img src="./static/images/example_2.png" alt="Dataset Example 3">
+      </figure>
+      <p style="font-size: medium; text-align: center; margin-top: -20px;">
+        <i>
+          A <strong>normal</strong> scene, used to evaluate model robustness against false positives and to enhance dataset diversity.
+        </i>
+      </p>
+    </div>
 </section>
+
 
 
 

@@ -128,3 +128,22 @@ body {
 .results-carousel video {
   margin: 0;
 }
+
+.example-content.is-hidden {
+  display: none;
+}
+
+.toggle-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.tag.is-active {
+  background-color: #f60c65d5 !important;  /* bright pink */
+  color: white !important;
+  font-weight: bold;
+}
+
+.tag.is-light {
+  transition: background-color 0.3s, color 0.3s;
+}
