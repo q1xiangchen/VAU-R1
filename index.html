@@ -53,8 +53,8 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2505.23504"
-                   class="external-link button is-normal is-rounded is-dark">
+                <a href="https://arxiv.org/pdf/2505.23504"
+                   class="external-link button is-normal is-rounded">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
                   </span>
@@ -64,7 +64,7 @@
               <!-- Code Link. -->
               <span class="link-block">
                 <a href="https://github.com/GVCLab/VAU-R1"
-                   class="external-link button is-normal is-rounded is-dark">
+                   class="external-link button is-normal is-rounded">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
@@ -73,8 +73,8 @@
               </span>
               <!-- HuggingFace Link. -->
               <span class="link-block">
-                <a href="https://huggingface.co/GVCLab/VAU-R1"
-                   class="external-link button is-normal is-rounded is-dark">
+                <a href="https://huggingface.co/datasets/7xiang/VAU-Bench"
+                   class="external-link button is-normal is-rounded">
                   <span class="icon">
                       <img src="./static/images/huggingface_logo-noborder.svg">
                   </span>
@@ -102,37 +102,323 @@
   <div class="container is-max-desktop">
     <!-- Overview. -->
     <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Overview</h2>
+      <div class="column is-ten-fifths">
+        <!-- <h2 class="title is-3">Overview</h2> -->
         <div class="content has-text-justified">
+          <h2>💡 Motivation</h2>
           <p>
-            To move beyond shallow classification and toward deeper understanding, we decompose Video Anomaly Understanding (VAU) into four progressive stages: <br>
-            
-            (i) <b>Perception</b> — identifying the scene and relevant objects, either through free-text descriptions or guided multiple-choice questions. <br>
-            
-            (ii) <b>Grounding</b> — localizing the precise temporal segment where the anomaly occurs. <br>
-            
-            (iii) <b>Reasoning</b> — explaining the event by analyzing causal factors, temporal dynamics, and contextual cues. <br>
-            
-            (iv) <b>Conclusion</b> — summarizing the event with a final decision, such as assigning it to a specific category (e.g., <i>fighting</i> vs. <i>robbery</i>). <br>
-            This structured formulation enables models to progressively build semantic understanding and supports more interpretable and task-aligned evaluation.
+            Video Anomaly Understanding (VAU) involves detecting and interpreting irregular events—like fighting or theft—in unstructured, real-world video. 
+            While early methods treat this as a binary classification task (normal vs. abnormal), they offer limited interpretability and fail to explain why anomalies occur.
+            Recent progress in Multimodal Large Language Models (MLLMs) has improved transparency by generating textual descriptions. 
+            However, current approaches still face key challenges:
           </p>
+          <ol>
+            <li>No coherent, multi-step reasoning to explain anomalies</li>
+            <li>Lack of benchmarks with rich annotations for causal reasoning</li>
+            <li>Underdeveloped evaluation protocols for reasoning quality</li>
+          </ol>
+          <p>
+            To move beyond shallow binary classification and enable deeper understanding, we decompose Video Anomaly Understanding (VAU) into four progressive reasoning stages:
+          </p>
+          <ol>
+            <li><strong>Perception</strong>: Identify the scene and relevant objects via free-text or multiple-choice questions.</li>
+            <li><strong>Grounding</strong>: Localize the temporal segment where the anomaly occurs.</li>
+            <li><strong>Reasoning</strong>: Explain the event based on causal relationships, temporal context, and scene dynamics.</li>
+            <li><strong>Conclusion</strong>: Make a final decision (e.g., classifying the anomaly type such as <em>fighting</em> or <em>robbery</em>).</li>
+          </ol>
           <figure class="image">
-            <img src="./static/images/results.png">
+            <img src="./static/images/results.png" alt="Results Overview">
           </figure>
-          <p>
-            To implement this four-stage formulation, we introduce <b>VAU-R1</b>, a Reinforcement Fine-Tuning (RFT) framework designed to improve the reasoning capabilities of MLLMs on the VAU tasks. Our method builds on Group Relative Policy Optimization (GRPO), incorporating task-specific reward signals based on answer format correctness, question-answer accuracy, and temporal grounding alignment. The framework is data-efficient and can be applied in low-resource settings, making it practical for real-world deployments.
-          </p>
+          <h3>🔍 Key Contributions</h3>
+          <ul>
+            <li><strong>VAU-R1:</strong> a data-efficient Reinforcement Fine-Tuning framework that improves the reasoning ability of MLLMs for video anomaly understanding. It outperforms standard supervised fine-tuning on reasoning-intensive tasks.</li>
+            <li><strong>VAU-Bench:</strong> The first large-scale benchmark with Chain-of-Thought annotations designed for video anomaly reasoning. It contains a diverse collection of videos, QA pairs, temporal labels, and detailed rationales spanning a wide range of real-world scenarios.</li>
+            <li><strong>Unified Evaluation:</strong> A structured protocol that measures model performance across four reasoning stages, jointly considering reasoning quality, answer correctness, and temporal localization to capture both interpretability and detection precision.</li>
+          </ul>
           <figure class="image">
             <img src="./static/images/bench.png">
-          </figure>
-          <p>
-            To support training and evaluation, we also construct <b>VAU-Bench</b>, a new benchmark that spans diverse scenarios and provides rich annotations across the four reasoning stages, including multiple-choice QA pairs, detailed event descriptions, temporal groundings, and step-by-step rationales. Finally, we propose a set of evaluation metrics—QA accuracy, temporal Intersection-over-Union (IoU), GPT-based reasoning score, and classification accuracy—to quantitatively assess model performance across perception, grounding, reasoning, and conclusion.
+            <p style="font-size: medium;"><i>
+            <b>Statistics of our VAU-Bench.</b>
+            (a) Distribution of main anomaly types.
+            (b) Distribution of video durations <i>(top)</i> and the proportion of anomalous segments within each video <i>(bottom)</i>.  
+            (c) The evaluation criteria for four VAU tasks.</i>
           </p>
+          </figure>
         </div>
       </div>
     </div>
     <!--/ Overview. -->
+  </div>
+</section>
+
+<section class="section" id="Results">
+  <div class="container is-max-desktop content">
+    <h2 class="title">📊 Results</h2>
+
+    <p>
+      We evaluate <strong>VAU-R1</strong> on the <strong>VAU-Bench</strong> dataset, which encompasses diverse real-world scenarios from MSAD, UCF-Crime, and ECVA. The evaluation focuses on four key tasks: multiple-choice question answering (QA), temporal anomaly grounding, anomaly reasoning, and anomaly classification.
+    </p>
+
+    <h3>🧠 Multi-choice QA & QA-Guided Reasoning</h3>
+    <ul>
+      <li><strong>Naïve reasoning can hurt accuracy</strong>: Base models often perform worse when generating answers with reasoning (<code>Acc<sub>w/think</sub></code>) than without (<code>Acc<sub>w/o think</sub></code>), suggesting that unguided Chain-of-Thought generation may introduce hallucinations.</li>
+      <li><strong>RFT improves both accuracy and reasoning</strong>: Reinforcement fine-tuning consistently boosts QA performance with reasoning (e.g., +11.25 on MSAD) and enhances the structure and clarity of generated outputs.</li>
+      <li><strong>RFT excels across VAU-Eval dimensions</strong>: It delivers consistent gains across classification, key matching, fluency, informativeness, and factuality. Notably, Qwen2.5-VL-3B+RFT achieves the highest total score (33.38) on MSAD, outperforming its SFT counterpart.</li>
+    </ul>
+
+    <table border="1" cellspacing="0" cellpadding="6">
+      <thead>
+        <tr>
+          <th rowspan="2">Dataset</th>
+          <th rowspan="2">Model</th>
+          <th colspan="2" style="text-align: center;">QA Accuracy (%)</th>
+          <th colspan="6" style="text-align: center;">VAU-Eval (0-10)</th>
+        </tr>
+        <tr>
+          <th>Acc (w/o think)</th>
+          <th>Acc (w/ think)</th>
+          <th>CLS</th>
+          <th>KM</th>
+          <th>FLU</th>
+          <th>INF</th>
+          <th>FAC</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- MSAD -->
+        <tr><td rowspan="9">MSAD</td><td>InternVL2.5-2B</td><td>76.67</td><td>72.08</td><td>6.84</td><td>6.23</td><td>8.55</td><td>6.64</td><td>6.64</td><td>34.90</td></tr>
+        <tr><td>Qwen2.5-VL-7B</td><td>84.58</td><td>83.33</td><td>6.75</td><td>6.41</td><td>9.27</td><td>7.74</td><td>6.92</td><td>37.08</td></tr>
+        <tr><td>InternVL2.5-8B-MPO</td><td>82.50</td><td>84.17</td><td>6.83</td><td>6.33</td><td>8.32</td><td>6.37</td><td>6.86</td><td>34.72</td></tr>
+        <tr><td>Qwen2-VL-2B</td><td>77.08</td><td>72.50</td><td>5.94</td><td>5.43</td><td>8.77</td><td>6.29</td><td>5.90</td><td>32.25</td></tr>
+        <tr><td>+ SFT</td><td>82.92</td><td><strong>85.83</strong></td><td>6.04</td><td>5.43</td><td>8.89</td><td>6.55</td><td>5.93</td><td>32.84</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>82.92 <span style="color:red;">↑5.84</span></strong></td><td>83.75 <strong><span style="color:red;">↑11.25</span></strong></td><td>6.05 <span style="color:red;">↑</span></td><td>5.49 <span style="color:red;">↑</span></td><td>8.89</td><td>6.50 <span style="color:red;">↑</span></td><td>6.05 <span style="color:red;">↑</span></td><td>32.98 <span style="color:red;">↑</span></td></tr>
+        <tr><td>Qwen2.5-VL-3B</td><td>85.83</td><td>82.50</td><td>5.77</td><td>5.24</td><td>9.02</td><td>6.74</td><td>5.70</td><td>32.47</td></tr>
+        <tr><td>+ SFT</td><td>86.25</td><td>84.58</td><td>2.89</td><td>2.22</td><td>4.89</td><td>3.52</td><td>2.44</td><td>15.96</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>88.33 <span style="color:red;">↑2.50</span></strong></td><td><strong>87.08 <span style="color:red;">↑4.58</span></strong></td><td>5.97 <span style="color:red;">↑</span></td><td>5.49 <span style="color:red;">↑</span></td><td>9.05 <span style="color:red;">↑</span></td><td>6.84 <span style="color:red;">↑</span></td><td>6.03 <span style="color:red;">↑</span></td><td>33.38 <span style="color:red;">↑</span></td></tr>
+
+        <!-- UCF-Crime -->
+        <tr><td rowspan="9">UCF-Crime</td><td>InternVL2.5-2B</td><td>84.86</td><td>68.13</td><td>4.40</td><td>3.08</td><td>8.09</td><td>5.69</td><td>3.47</td><td>24.74</td></tr>
+        <tr><td>Qwen2.5-VL-7B</td><td>92.03</td><td>89.64</td><td>4.80</td><td>3.73</td><td>8.95</td><td>7.05</td><td>4.25</td><td>28.78</td></tr>
+        <tr><td>InternVL2.5-8B-MPO</td><td>89.64</td><td>90.44</td><td>3.79</td><td>3.20</td><td>8.23</td><td>5.77</td><td>3.48</td><td>24.47</td></tr>
+        <tr><td>Qwen2-VL-2B</td><td>87.25</td><td>83.67</td><td>3.47</td><td>2.48</td><td>7.75</td><td>4.49</td><td>2.82</td><td>21.02</td></tr>
+        <tr><td>+ SFT</td><td>83.67</td><td>86.06</td><td>3.61</td><td>2.26</td><td>7.30</td><td>4.79</td><td>2.70</td><td>20.66</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>88.45 <span style="color:red;">↑1.20</span></strong></td><td><strong>88.05 <span style="color:red;">↑4.38</span></strong></td><td>4.04 <span style="color:red;">↑</span></td><td>2.75 <span style="color:red;">↑</span></td><td>7.72 <span style="color:blue;">↓</span></td><td>4.89 <span style="color:red;">↑</span></td><td>3.11 <span style="color:red;">↑</span></td><td>22.52 <span style="color:red;">↑</span></td></tr>
+        <tr><td>Qwen2.5-VL-3B</td><td>91.63</td><td>83.27</td><td>4.31</td><td>2.88</td><td>8.70</td><td>5.95</td><td>3.27</td><td>25.10</td></tr>
+        <tr><td>+ SFT</td><td>90.84</td><td>90.44</td><td>1.80</td><td>1.01</td><td>4.15</td><td>2.82</td><td>1.11</td><td>10.89</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>92.03 <span style="color:red;">↑0.40</span></strong></td><td><strong>91.63 <span style="color:red;">↑8.36</span></strong></td><td>4.42 <span style="color:red;">↑</span></td><td>2.98 <span style="color:red;">↑</span></td><td>8.71 <span style="color:red;">↑</span></td><td>5.98 <span style="color:red;">↑</span></td><td>3.39 <span style="color:red;">↑</span></td><td>25.49 <span style="color:red;">↑</span></td></tr>
+        <tr></tr>
+      </tbody>
+    </table>
+
+    <center>
+      <p style="font-size: medium;">
+        <i>Comparison of performance on MSAD and UCF-Crime datasets on multiple-choice QA task and anomaly reasoning task.
+        Results are reported for inference with and without Chain-of-Thought ("think") prompts.</i>
+      </p>
+    </center>
+
+    <h3>📍 Temporal Anomaly Grounding</h3>
+    <ul>
+      <li><strong>RFT consistently outperforms</strong> base models in both inference modes, improving temporal localization and generalization. Notably, the RFT-finetuned 3B model achieves higher mIoU than the larger 7B base model on ECVA.</li>
+      <li><strong>Chain-of-Thought prompting</strong> does not always help grounding; in some cases, it slightly degrades performance.</li>
+      <li><strong>RFT generalizes better</strong> to unseen data. While SFT can occasionally match RFT, its outputs are often repetitive and less interpretable.</li>
+    </ul>
+    <table border="1" cellspacing="0" cellpadding="6">
+      <thead>
+        <tr>
+          <th rowspan="2">Dataset</th>
+          <th rowspan="2">Model</th>
+          <th colspan="4">w/o think</th>
+          <th colspan="4">w/ think</th>
+        </tr>
+        <tr>
+          <th>mIoU</th>
+          <th>R@0.3</th>
+          <th>R@0.5</th>
+          <th>R@0.7</th>
+          <th>mIoU</th>
+          <th>R@0.3</th>
+          <th>R@0.5</th>
+          <th>R@0.7</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- MSAD -->
+        <tr><td rowspan="5">MSAD</td><td>Qwen2-VL-2B</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+        <tr><td>Qwen2.5-VL-7B</td><td>45.90</td><td>70.83</td><td>45.83</td><td>21.67</td><td>17.57</td><td>26.67</td><td>11.67</td><td>3.33</td></tr>
+        <tr><td>Qwen2.5-VL-3B</td><td>21.27</td><td>30.00</td><td>10.83</td><td>4.17</td><td>13.00</td><td>16.67</td><td>5.83</td><td>1.67</td></tr>
+        <tr><td>+ SFT</td><td>30.65</td><td>47.50</td><td>30.00</td><td>9.17</td><td>35.17</td><td>50.83</td><td>34.17</td><td>15.00</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>35.77 <span style="color: red;">↑14.50</span></strong></td><td>53.33</td><td>34.17</td><td>15.83</td><td><strong>30.70 <span style="color: red;">↑17.70</span></strong></td><td>48.33</td><td>29.17</td><td>12.50</td></tr>
+
+        <!-- ECVA -->
+        <tr><td rowspan="5">ECVA</td><td>Qwen2-VL-2B</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.17</td><td>0.30</td><td>0.00</td><td>0.00</td></tr>
+        <tr><td>Qwen2.5-VL-7B</td><td>19.85</td><td>25.87</td><td>15.17</td><td>9.70</td><td>5.71</td><td>7.96</td><td>4.73</td><td>2.99</td></tr>
+        <tr><td>Qwen2.5-VL-3B</td><td>14.21</td><td>17.16</td><td>6.47</td><td>3.23</td><td>6.35</td><td>7.21</td><td>1.99</td><td>0.50</td></tr>
+        <tr><td>+ SFT</td><td>45.30</td><td>66.67</td><td>49.75</td><td>24.13</td><td>45.96</td><td>65.67</td><td>51.00</td><td>26.12</td></tr>
+        <tr><td><strong>+ RFT</strong></td><td><strong>35.09 <span style="color: red;">↑20.88</span></strong></td><td>49.00</td><td>28.86</td><td>19.40</td><td><strong>33.25 <span style="color: red;">↑26.90</span></strong></td><td>48.51</td><td>30.60</td><td>18.41</td></tr>
+
+        <!-- UCF-Crime -->
+        <tr style="background-color: #fffbe6;"><td rowspan="5">UCF-Crime (OOD)</td><td>Qwen2-VL-2B</td><td>2.74</td><td>4.84</td><td>0.00</td><td>0.00</td><td>0.12</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+        <tr style="background-color: #fffbe6;"><td>Qwen2.5-VL-7B</td><td>22.72</td><td>33.87</td><td>16.13</td><td>8.06</td><td>4.89</td><td>8.06</td><td>1.61</td><td>0.00</td></tr>
+        <tr style="background-color: #fffbe6;"><td>Qwen2.5-VL-3B</td><td>10.91</td><td>15.32</td><td>6.45</td><td>3.23</td><td>7.68</td><td>10.48</td><td>4.84</td><td>1.61</td></tr>
+        <tr style="background-color: #fffbe6;"><td>+ SFT</td><td>4.98</td><td>3.23</td><td>0.81</td><td>0.00</td><td>5.76</td><td>5.65</td><td>0.81</td><td>0.81</td></tr>
+        <tr style="background-color: #fffbe6;"><td><strong>+ RFT</strong></td><td><strong>16.80 <span style="color: red;">↑5.89</span></strong></td><td>23.39</td><td>8.06</td><td>4.03</td><td><strong>9.21 <span style="color: red;">↑1.53</span></strong></td><td>9.68</td><td>4.03</td><td>1.61</td></tr>
+        <tr></tr>
+      </tbody>
+    </table>
+    <center>
+    <p style="font-size: medium;">
+      <i>Comparison of temporal anomaly grounding performance on the three datasets. we evaluate temporal anomaly grounding on three datasets: <strong>MSAD</strong>, <strong>ECVA</strong>, and <strong>UCF-Crime</strong>. All models are trained only on MSAD and ECVA, while UCF-Crime is treated as an <em>out-of-distribution</em> (OOD) test set to assess cross-dataset generalization.</i>
+    </p></center>
+
+
+    <h3>🧪 Task Co-Training for Anomaly Classification</h3>
+    <ul>
+      <li><strong>TAG boosts perception</strong>: RFT with temporal grounding alone yields the best binary (74.14) and strong multi-class (46.14) accuracy under <code>w/ think</code>, underscoring the importance of temporal context.</li>
+      <li><strong>QA + TAG are synergistic</strong>: Combining QA and TAG improves performance, though TAG alone remains most effective.</li>
+      <li><strong>SFT tends to overfit</strong>: Despite high binary accuracy (83.37), SFT underperforms in multi-class classification, indicating reduced precision.</li>
+      <li><strong>Multi-task RFT balances trade-offs</strong>: Jointly training with QA, TAG, and CLS via RFT leads to well-rounded reasoning and accuracy.</li>
+    </ul>
+
+    <table border="1" cellspacing="0" cellpadding="6">
+      <thead>
+        <tr>
+          <th rowspan="2">Model</th>
+          <th colspan="2" style="text-align: center;">w/o think</th>
+          <th colspan="2" style="text-align: center;">w/ think</th>
+        </tr>
+        <tr>
+          <th>Bin. Acc.</th>
+          <th>Multi Acc.</th>
+          <th>Bin. Acc.</th>
+          <th>Multi Acc.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Baseline (Qwen2.5-VL-3B-Instruct)</td>
+          <td>62.77</td>
+          <td>47.96</td>
+          <td>59.33</td>
+          <td>39.06</td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: teal;">SFT</span> w/ CLS</td>
+          <td><strong>81.12</strong></td>
+          <td>29.08</td>
+          <td><strong>83.37</strong></td>
+          <td>32.19</td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: red;">RFT</span> w/ CLS</td>
+          <td>60.30</td>
+          <td>46.14</td>
+          <td>59.01</td>
+          <td>42.27</td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: red;">RFT</span> w/ QA</td>
+          <td>59.01</td>
+          <td>46.14</td>
+          <td>58.91</td>
+          <td>41.95</td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: red;">RFT</span> w/ TAG</td>
+          <td><u>67.81</u></td>
+          <td><strong>49.46</strong></td>
+          <td><u>74.14</u></td>
+          <td><strong>46.14</strong></td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: red;">RFT</span> w/ QA-TAG</td>
+          <td>65.77</td>
+          <td>47.53</td>
+          <td>67.60</td>
+          <td>45.06</td>
+        </tr>
+        <tr>
+          <td>+ <span style="color: red;">RFT</span> w/ QA-TAG-CLS</td>
+          <td>64.70</td>
+          <td><u>48.61</u></td>
+          <td>65.02</td>
+          <td><u>45.60</u></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size: medium; text-align: center; margin-top: 10px;">
+      <i>
+        Ablation study of task co-training for anomaly classification. <strong>Bin. Acc.</strong> = binary accuracy (normal vs. abnormal); <strong>Multi Acc.</strong> = multi-class accuracy across 19 anomaly types plus the normal class.
+      </i>
+    </p>
+
+
+
+
+    <h3>🔑 Key Insights</h3>
+    <ul>
+      <li><strong>RFT outperforms SFT</strong>: Reinforcement Fine-Tuning leads to better reasoning accuracy and stronger generalization compared to standard supervised fine-tuning.</li>
+      <li><strong>Interpretability through CoT</strong>: While Chain-of-Thought reasoning may not always boost raw visual understanding performance, it greatly enhances the interpretability of model outputs.</li>
+      <li><strong>Reward-aligned decomposition matters</strong>: Breaking down complex visual tasks into reward-aligned subtasks enables more stable and robust learning during training.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="Dataset">
+  <div class="container is-max-desktop content">
+    <h2 class="title">✏️ Case Study</h2>
+    <div class="columns is-variable is-6">
+    
+      <!-- QA + TAG Case -->
+      <div class="column is-half">
+        <figure class="image">
+          <img src="./static/images/qa_grounding_case_study.png" alt="QA and TAG Case Study">
+        </figure>
+        <p>
+          <strong>Qualitative case of the QA (<em>top</em>) and TAG (<em>bottom</em>) task.</strong> All ground-truths and correct answers are highlighted in orange. Both SFT and RFT perform inference using the same Chain-of-Thought (CoT) prompt. RFT’s explicit reasoning yields more precise, interpretable QA choices and anomaly intervals, whereas SFT’s outputs are less informative and often inaccurate.
+        </p>
+      </div>
+
+      <!-- Reasoning Case -->
+      <div class="column is-half">
+        <figure class="image">
+          <img src="./static/images/reasoning_case_study.png" alt="Anomaly Reasoning Case Study">
+        </figure>
+        <p>
+          <strong>Qualitative case of the Anomaly Reasoning task.</strong> All correct descriptions and analyses are highlighted in orange. Evaluation scores appear beside each answer. Both SFT and VAU-R1 use the same CoT prompt for inference. VAU-R1 accurately identifies the anomaly with high fluency, though it omits reasoning for the core event, while SFT's output is less accurate and tends to repeat.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="Dataset">
+  <div class="container is-max-desktop content">
+    <h2 class="title">📚 Dataset Examples</h2>
+    <div class="columns">
+    
+      <div>
+        <figure class="image">
+          <img src="./static/images/example_1.png" alt="Dataset Example 1">
+        </figure>
+        <p>
+          An <strong>explosion</strong> case in an outdoor backyard, highlighting complex anomaly detection and dynamic scene understanding. The clip is labeled with a question-answer pair, key visual evidence, anomaly type, and a multi-part reasoning chain covering location, cause-effect, and a high-level conclusion.
+        </p>
+      </div>
+
+      <div >
+        <figure class="image">
+          <img src="./static/images/example_2.png" alt="Dataset Example 2">
+        </figure>
+        <p>
+          A <strong>normal</strong> scene, used to evaluate model robustness against false positives and to enhance dataset diversity.
+        </p>
+      </div>
+
+    </div>
   </div>
 </section>
 
