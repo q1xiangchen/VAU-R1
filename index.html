@@ -107,44 +107,44 @@
         <div class="content has-text-justified">
           <h2>💡 Motivation</h2>
           <p>
-            Video Anomaly Understanding (VAU) involves detecting and interpreting irregular events—like fighting or theft—in unstructured, real-world video. 
-            While early methods treat this as a binary classification task (normal vs. abnormal), they offer limited interpretability and fail to explain why anomalies occur.
-            Recent progress in Multimodal Large Language Models (MLLMs) has improved transparency by generating textual descriptions. 
-            However, current approaches still face key challenges:
+            Video Anomaly Understanding (VAU) is vital for real-world applications such as smart cities, security surveillance, and disaster response. Unlike conventional video analysis tasks, VAU demands fine-grained inspection and multi-step reasoning in complex, dynamic, and often unpredictable environments. While early research focused primarily on binary classification (normal vs. abnormal) and temporal localization, such methods offer limited interpretability and provide little understanding of the underlying causes of anomalies.
+          </p>
+          <p>
+            Recent advances in Multimodal Large Language Models (MLLMs) have improved transparency by generating textual descriptions of anomalous events. However, four major challenges remain:
           </p>
           <ol>
-            <li>No coherent, multi-step reasoning to explain anomalies</li>
-            <li>Lack of benchmarks with rich annotations for causal reasoning</li>
-            <li>Underdeveloped evaluation protocols for reasoning quality</li>
+            <li>Lack of coherent, multi-step reasoning chains to explain anomalies</li>
+            <li>Unclear strategies for decomposing complex VAU tasks into effective subtasks for model supervision</li>
+            <li>Absence of rich, annotated benchmarks that support structured causal reasoning</li>
+            <li>Insufficient evaluation protocols to assess the quality of visual reasoning</li>
           </ol>
           <p>
-            To move beyond shallow binary classification and enable deeper understanding, we decompose Video Anomaly Understanding (VAU) into four progressive reasoning stages:
+            To move beyond shallow detection and enable deeper, interpretable anomaly understanding, we ask a central question:
+            <strong>What types of tasks (or reasoning pathways) can help enhance the understanding of anomalies?</strong>
+            To explore this, we introduce a framework consisting of three parallel training tasks. These tasks are co-trained either individually or in combination, and their effectiveness is evaluated through a dedicated anomaly analysis task.
           </p>
-          <ol>
-            <li><strong>Perception</strong>: Identify the scene and relevant objects via free-text or multiple-choice questions.</li>
-            <li><strong>Grounding</strong>: Localize the temporal segment where the anomaly occurs.</li>
-            <li><strong>Reasoning</strong>: Explain the event based on causal relationships, temporal context, and scene dynamics.</li>
-            <li><strong>Conclusion</strong>: Make a final decision (e.g., classifying the anomaly type such as <em>fighting</em> or <em>robbery</em>).</li>
-          </ol>
-          <figure class="image">
-            <img src="./static/images/results.png" alt="Results Overview">
-          </figure>
-          <p style="font-size: medium; text-align: center; margin-top: -30px;">
-            <i>
-              <strong>Effectiveness of Reinforcement Fine-Tuning.</strong>
-              We compare QA accuracy and temporal anomaly grounding performance across different models.
-              <strong>VAU-R1</strong>, trained via Reinforcement Fine-Tuning (RFT), consistently outperforms its Supervised Fine-Tuning (SFT) counterpart.
-              This demonstrates that RFT enhances both reasoning and temporal localization capabilities in VAU tasks.
-            </i>
+          <ul>
+            <li style="background-color: #FFE7C3;"><strong>Perception</strong>: Identify the scene and relevant entities through guided multiple-choice questions</li>
+            <li style="background-color: #D8E9FF;"><strong>Grounding</strong>: Accurately localize the temporal segment where the anomaly occurs</li>
+            <li style="background-color: #E9DAF2;"><strong>Classification</strong>: Categorize the anomaly based on observed evidence (e.g., fighting, robbery)</li>
+            <li style="background-color: #FDDCDC; list-style-type: square;"><strong>Analysis</strong>: Evaluate how well the model can explain why the anomaly occurred through structured causal reasoning</li>
+          </ul>
+          <p>
+            This decomposition enables models to acquire diverse reasoning skills, build deeper semantic understanding, and generate more interpretable outputs aligned with each task—ultimately supporting more robust and explainable video anomaly analysis.
           </p>
+
+
 
 
           <h3>🔍 Key Contributions</h3>
           <ul>
-            <li><strong>VAU-R1:</strong> a data-efficient Reinforcement Fine-Tuning framework that improves the reasoning ability of MLLMs for video anomaly understanding. It outperforms standard supervised fine-tuning on reasoning-intensive tasks.</li>
-            <li><strong>VAU-Bench:</strong> The first large-scale benchmark with Chain-of-Thought annotations designed for video anomaly reasoning. It contains a diverse collection of videos, QA pairs, temporal labels, and detailed rationales spanning a wide range of real-world scenarios.</li>
-            <li><strong>Unified Evaluation:</strong> A structured protocol that measures model performance across four reasoning stages, jointly considering reasoning quality, answer correctness, and temporal localization to capture both interpretability and detection precision.</li>
+            <li><strong>VAU-R1:</strong> A data-efficient Reinforcement Fine-Tuning (RFT) framework that enhances the multi-step reasoning capabilities of Multimodal Large Language Models (MLLMs) for video anomaly understanding. It is optimized using task-specific reward signals and consistently outperforms supervised fine-tuning across VAU tasks.</li>
+            
+            <li><strong>VAU-Bench:</strong> The first benchmark tailored for Chain-of-Thought video anomaly reasoning. It includes 4,600+ videos with diverse anomaly types and provides rich annotations such as multiple-choice QA, temporal intervals, anomaly classes, and step-by-step reasoning rationales.</li>
+            
+            <li><strong>Unified Evaluation Protocol:</strong> A comprehensive evaluation framework that assesses models along four key dimensions: perception accuracy, temporal grounding precision, classification correctness, and reasoning quality—capturing both interpretability and analytical depth.</li>
           </ul>
+
           <figure class="image">
             <img src="./static/images/bench.png">
             <p style="font-size: medium; text-align: center;"><i>
@@ -166,14 +166,21 @@
     <h2 class="title">📊 Results</h2>
 
     <p>
-      We evaluate <strong>VAU-R1</strong> on the <strong>VAU-Bench</strong> dataset, which encompasses diverse real-world scenarios from MSAD, UCF-Crime, and ECVA. The evaluation focuses on four key tasks: multiple-choice question answering (QA), temporal anomaly grounding, anomaly reasoning, and anomaly classification.
+      We evaluate <strong>VAU-R1</strong> on the <strong>VAU-Bench</strong> dataset, which encompasses diverse real-world scenarios from MSAD, UCF-Crime, and ECVA. The evaluation focuses on four key tasks: multiple-choice question answering (QA), temporal anomaly grounding, anomaly classification, and anomaly analysis.
     </p>
 
-    <h3>🧠 Multi-choice QA & QA-Guided Reasoning</h3>
+    <h3>🧠 Multiple-Choice QA</h3>
     <ul>
-      <li><strong>Naïve reasoning can hurt accuracy</strong>: Base models often perform worse when generating answers with reasoning (<code>Acc<sub>w/think</sub></code>) than without (<code>Acc<sub>w/o think</sub></code>), suggesting that unguided Chain-of-Thought generation may introduce hallucinations.</li>
-      <li><strong>RFT improves both accuracy and reasoning</strong>: Reinforcement fine-tuning consistently boosts QA performance with reasoning (e.g., +11.25 on MSAD) and enhances the structure and clarity of generated outputs.</li>
-      <li><strong>RFT excels across VAU-Eval dimensions</strong>: It delivers consistent gains across classification, key matching, fluency, informativeness, and factuality. Notably, Qwen2.5-VL-3B+RFT achieves the highest total score (33.38) on MSAD, outperforming its SFT counterpart.</li>
+      <li><strong>Reasoning hurts without structure:</strong> Base models often underperform when forced to reason via <code>&lt;think&gt;</code> prompts, indicating unstructured reasoning introduces noise.</li>
+      <li><strong>RFT consistently boosts performance:</strong> Across MSAD and UCF-Crime, RFT significantly improves both <code>Acc<sub>w/o think</sub></code> and <code>Acc<sub>w/think</sub></code>, while maintaining output structure.</li>
+      <li><strong>Best overall QA accuracy:</strong> VAU-R1 (Qwen2.5-VL-3B+RFT) achieves <strong>88.33%</strong> QA accuracy on MSAD and <strong>92.03%</strong> on UCF-Crime, outperforming all baselines.</li>
+    </ul>
+
+    <h3>🧩 Anomaly Analysis</h3>
+    <ul>
+      <li><strong>RFT improves reasoning depth:</strong> On MSAD, Qwen2.5-VL-3B+RFT achieves a total VAU-Eval score of <strong>33.38</strong>, outperforming SFT (15.96) and base models.</li>
+      <li><strong>Balanced reasoning quality:</strong> RFT achieves notable gains in <em>classification accuracy</em> (CLS), <em>key matching</em> (KM), and <em>factual consistency</em> (FAC), providing coherent and factual explanations.</li>
+      <li><strong>Generalization to unseen data:</strong> On UCF-Crime, RFT models maintain higher VAU-Eval scores despite domain shift, showing better reasoning robustness than SFT.</li>
     </ul>
 
     <table border="1" cellspacing="0" cellpadding="6">
@@ -223,7 +230,7 @@
 
     <center>
       <p style="font-size: medium; text-align: center; margin-top: 10px;">
-        <i>Comparison of performance on MSAD and UCF-Crime datasets on multiple-choice QA task and anomaly reasoning task.
+        <i>Comparison of performance on MSAD and UCF-Crime datasets on multiple-choice QA task and anomaly analysis task.
         Results are reported for inference with and without Chain-of-Thought ("think") prompts.</i>
       </p>
     </center>
@@ -382,7 +389,7 @@
     <div class="tags are-medium">
       <span class="tag is-link is-light toggle-button" data-target="qa">Multi-choice QA</span>
       <span class="tag is-link is-light toggle-button" data-target="tag">Temporal Anomaly Grounding</span>
-      <span class="tag is-link is-light toggle-button" data-target="reasoning">Anomaly Reasoning</span>
+      <span class="tag is-link is-light toggle-button" data-target="reasoning">Anomaly Analysis</span>
     </div>
 
     <!-- QA Case -->
@@ -412,11 +419,11 @@
     <!-- Reasoning Case -->
     <div id="reasoning" class="example-content is-hidden">
       <figure class="image">
-        <img src="./static/images/reasoning_case_study.png" alt="Anomaly Reasoning Case Study">
+        <img src="./static/images/reasoning_case_study.png" alt="Anomaly Analysis Case Study">
       </figure>
       <p style="font-size: medium; text-align: center; margin-top: -10px;">
         <i>
-          <strong>Qualitative case of the Anomaly Reasoning task.</strong> Correct descriptions and analyses are highlighted in orange. VAU-R1 identifies the anomaly with high fluency, though omits reasoning for the core event. SFT's output is less accurate and tends to repeat.
+          <strong>Qualitative case of the Anomaly Analysis task.</strong> Correct descriptions and analyses are highlighted in orange. VAU-R1 identifies the anomaly with high fluency, though omits reasoning for the core event. SFT's output is less accurate and tends to repeat.
         </i>
       </p>
     </div>
